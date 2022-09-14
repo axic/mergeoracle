@@ -5,10 +5,6 @@ import "forge-std/Test.sol";
 
 import {DidWeMergeYet, IMergeOracle} from "../src/MergeOracle.sol";
 
-interface Cheat {
-    function difficulty(uint256) external;
-}
-
 contract MergeOracleTest is Test {
     DidWeMergeYet dwmy;
 
@@ -19,7 +15,7 @@ contract MergeOracleTest is Test {
     }
 
     function testTriggerFail() public {
-        Cheat(address(vm)).difficulty(14161651193727183); // block 14981244
+        vm.difficulty(14161651193727183); // block 14981244
         vm.expectRevert(0x6f726dda);
         dwmy.trigger();
     }
@@ -28,7 +24,7 @@ contract MergeOracleTest is Test {
         assertEq(dwmy.balanceOf(address(this)), 0);
 
         // Set difficulty within range of PREVRANDAO
-        Cheat(address(vm)).difficulty(uint256(type(uint64).max) + 1);
+        vm.difficulty(uint256(type(uint64).max) + 1);
         address expectedOracle = 0xD6a6f0D7f08c2D31455a210546F85DdfF1D9030a;
         assertTrue(expectedOracle.code.length == 0);
         assertEq(address(dwmy.trigger()), expectedOracle);
