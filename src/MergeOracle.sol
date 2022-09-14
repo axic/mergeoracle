@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
 
+import "solmate/tokens/ERC721.sol";
+
 IMergeOracle constant ADDRESS = IMergeOracle(0xD6a6f0D7f08c2D31455a210546F85DdfF1D9030a);
 
 interface IMergeOracle {
@@ -26,7 +28,7 @@ contract MergeOracle is IMergeOracle {
 ///
 /// If you also need to know what (a potential) merge block is, the oracle needs to be called
 /// and ensured that a non-zero value is returned: `require(ADDRESS.mergeBlock() != 0);`
-contract DidWeMergeYet {
+contract DidWeMergeYet is ERC721 {
     /// The merge is not here yet.
     error No();
 
@@ -35,7 +37,7 @@ contract DidWeMergeYet {
 
     IMergeOracle public immutable oracle;
 
-    constructor() {
+    constructor() ERC721("Merge Oracle Triggerer", "MOT") {
         oracle = MergeOracle(calculateCreate(address(this), 1));
         // Ensure we arrived at the correct value.
         assert(oracle == ADDRESS);
@@ -53,6 +55,8 @@ contract DidWeMergeYet {
 
         _oracle = new MergeOracle();
         assert(_oracle == oracle);
+
+        _mint(msg.sender, 1);
     }
 
     function calculateCreate(address from, uint256 nonce) private pure returns (address) {
@@ -60,5 +64,8 @@ contract DidWeMergeYet {
         bytes memory data =
             bytes.concat(hex"d694", bytes20(uint160(from)), nonce == 0 ? bytes1(hex"80") : bytes1(uint8(nonce)));
         return address(uint160(uint256(keccak256(data)))); // Take the lower 160-bits
+    }
+
+    function tokenURI(uint256 /*id*/) public pure override returns (string memory) {
     }
 }
