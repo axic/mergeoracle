@@ -27,7 +27,7 @@ contract MergeOracleTest is Test {
     function testTriggerSuccess() public {
         // Set difficulty within range of PREVRANDAO
         Cheat(address(vm)).difficulty(uint256(type(uint64).max) + 1);
-        address expectedOracle = 0x4a60eB1D95B4C6523148a1CbF2F183286b1BB95C;
+        address expectedOracle = 0xD6a6f0D7f08c2D31455a210546F85DdfF1D9030a;
         assertTrue(expectedOracle.code.length == 0);
         assertEq(address(dwmy.trigger()), expectedOracle);
         assertTrue(expectedOracle.code.length != 0);

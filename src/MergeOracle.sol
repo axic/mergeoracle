@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.14;
 
-IMergeOracle constant ADDRESS = IMergeOracle(address(0));
+IMergeOracle constant ADDRESS = IMergeOracle(0xD6a6f0D7f08c2D31455a210546F85DdfF1D9030a);
 
 interface IMergeOracle {
     /// Returns the earliest block on which we know the merge was already active.
@@ -33,14 +33,12 @@ contract DidWeMergeYet {
     /// Merge already recorded.
     error AlreadyTrigerred();
 
-    bytes32 private constant SALT = bytes32("The Merge called Paris");
     IMergeOracle public immutable oracle;
 
     constructor() {
-        //oracle = MergeOracle(calculateCreate(address(this), 1));
-        oracle = MergeOracle(calculateCreate2(address(this), keccak256(type(MergeOracle).creationCode), SALT));
+        oracle = MergeOracle(calculateCreate(address(this), 1));
         // Ensure we arrived at the correct value.
-        // assert(oracle == ADDRESS);
+        assert(oracle == ADDRESS);
     }
 
     function trigger() external returns (IMergeOracle _oracle) {
@@ -53,8 +51,7 @@ contract DidWeMergeYet {
             revert AlreadyTrigerred();
         }
 
-        //_oracle = new MergeOracle();
-        _oracle = new MergeOracle{salt: SALT}();
+        _oracle = new MergeOracle();
         assert(_oracle == oracle);
     }
 
@@ -63,9 +60,5 @@ contract DidWeMergeYet {
         bytes memory data =
             bytes.concat(hex"d694", bytes20(uint160(from)), nonce == 0 ? bytes1(hex"80") : bytes1(uint8(nonce)));
         return address(uint160(uint256(keccak256(data)))); // Take the lower 160-bits
-    }
-
-    function calculateCreate2(address creator, bytes32 codehash, bytes32 salt) private pure returns (address) {
-        return address(uint160(uint256(keccak256(abi.encodePacked(bytes1(0xff), creator, salt, codehash)))));
     }
 }
