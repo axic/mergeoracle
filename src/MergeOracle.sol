@@ -67,5 +67,6 @@ contract DidWeMergeYet is ERC721 {
     }
 
     function tokenURI(uint256 /*id*/) public pure override returns (string memory) {
+        return "ipfs://QmcnZk7CrAeS2NcY62FUcoH9knbTS1HK8mdYbshwF1S8kh";
     }
 }

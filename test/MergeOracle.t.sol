@@ -42,6 +42,6 @@ contract MergeOracleTest is Test {
     function testNFT() public {
         assertEq(dwmy.name(), "Merge Oracle Triggerer");
         assertEq(dwmy.symbol(), "MOT");
-        assertEq(dwmy.tokenURI(1), "");
+        assertEq(dwmy.tokenURI(1), "ipfs://QmcnZk7CrAeS2NcY62FUcoH9knbTS1HK8mdYbshwF1S8kh");
     }
 }
