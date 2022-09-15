@@ -45,6 +45,9 @@ contract DidWeMergeYet is ERC721 {
 
     function trigger() external returns (IMergeOracle _oracle) {
         // Based on EIP-4399 and the Beacon Chain specs, the mixHash field should be greater than 2**64.
+        //
+        // However 
+        // Since difficulty values around 
         if (block.difficulty <= type(uint64).max) {
             revert No();
         }
