@@ -1,0 +1,19 @@
+{
+  "description": "The 1/1 NFT minted on the merge block that deployed the merge oracle. The merge oracle is a contract that can only be deployed after the merge has happened. The 1/1 NFT was minted to the address that triggered the deploy.",
+  "name": "Wrapped Merge Oracle Triggerer",
+  "image": "ipfs://QmcnZk7CrAeS2NcY62FUcoH9knbTS1HK8mdYbshwF1S8kh",
+  "attributes": [
+    {
+      "trait_type": "mergeBlock",
+      "value": "15537394"
+    },
+    {
+      "trait_type": "mergeTimestamp",
+      "value": "1663224179"
+    },
+    {
+      "trait_type": "MergeOracle",
+      "value": "0xD6a6f0D7f08c2D31455a210546F85DdfF1D9030a"
+    }
+  ]
+}
