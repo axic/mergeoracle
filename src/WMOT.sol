@@ -2,7 +2,9 @@
 pragma solidity 0.8.14;
 
 import "solmate/tokens/ERC721.sol";
+import "solmate/utils/LibString.sol";
 
+import "./MergeOracle.sol";
 import "./Base64.sol";
 
 /// Error when calling unwrap without owning the 1/1 WMOT token.
@@ -14,10 +16,10 @@ error InvalidTokenId();
 /// Wraps the Merge Oracle Triggerer with a rich metadata format
 contract WMOT is ERC721("Wrapped Merge Oracle Triggerer", "WMOT") {
     /// Address of the original Merge Oracle Trigger or `DidWeMergeYet` contract.
-    ERC721 public constant MOT = ERC721(0xc86E1A7a4AA5A9B17f6997a59B311835fc95e975);
+    DidWeMergeYet public constant MOT = DidWeMergeYet(0xc86E1A7a4AA5A9B17f6997a59B311835fc95e975);
 
     /// Address of the Merge Oracle.
-    address public constant Oracle = 0xD6a6f0D7f08c2D31455a210546F85DdfF1D9030a;
+    IMergeOracle public constant ORACLE = IMergeOracle(0xD6a6f0D7f08c2D31455a210546F85DdfF1D9030a);
 
     /// Returns the deployer or the WMOT contract.
     /// The contract is permissionless.
@@ -25,7 +27,7 @@ contract WMOT is ERC721("Wrapped Merge Oracle Triggerer", "WMOT") {
     address public immutable owner = msg.sender;
 
     constructor() {
-        assert(Oracle == MOT.oracle());
+        assert(address(ORACLE) == address(MOT.oracle()));
     }
 
     function wrap() external {
@@ -58,10 +60,10 @@ contract WMOT is ERC721("Wrapped Merge Oracle Triggerer", "WMOT") {
                             '",',
                             '"attributes": [',
                             '{ "trait_type": "mergeBlock", "value": ',
-                            Oracle.mergeBlock(),
+                            LibString.toString(ORACLE.mergeBlock()),
                             " },",
                             '{ "trait_type": "mergeTimestamp", "value": ',
-                            Oracle.mergeTimestamp(),
+                            LibString.toString(ORACLE.mergeTimestamp()),
                             " },",
                             '{ "trait_type": "MergeOracle", "value": "0xD6a6f0D7f08c2D31455a210546F85DdfF1D9030a" }',
                             "]",
